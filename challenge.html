@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="5s9 English - Explore challenges and activities">
+    <title>5s9 English | Challenge</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --accent-color: #1976D2;
+            --error-color: #f44336;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --background-gradient: linear-gradient(135deg, navy 0%, #a400ff 100%);
+            
+            /* Challenge-specific colors */
+            --voice-gradient: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            --quiz-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --writing-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --listening-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            background: var(--background-gradient);
+            padding: 1.25rem;
+            padding-bottom: 5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);  /* Increased opacity */
+            backdrop-filter: blur(10px);
+            padding: 1rem 1rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 3rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .header-fixed h1 {
+            color: darkblue;
+            font-size: 1.5rem;
+            margin: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Search Section */
+        .search-section {
+            margin-top: 4rem;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .search-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        /* Challenge Cards */
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .challenge-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .challenge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+        }
+
+        .challenge-card.voice::before {
+            background: var(--voice-gradient);
+        }
+
+        .challenge-card.quiz::before {
+            background: var(--quiz-gradient);
+        }
+
+        .challenge-card.writing::before {
+            background: var(--writing-gradient);
+        }
+
+        .challenge-card.listening::before {
+            background: var(--listening-gradient);
+        }
+
+        .challenge-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .voice .challenge-icon {
+            background: var(--voice-gradient);
+        }
+
+        .quiz .challenge-icon {
+            background: var(--quiz-gradient);
+        }
+
+        .writing .challenge-icon {
+            background: var(--writing-gradient);
+        }
+
+        .listening .challenge-icon {
+            background: var(--listening-gradient);
+        }
+
+        .challenge-title {
+            color: white;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .challenge-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .challenge-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat {
+            color: white;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .challenge-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Navigation */
+        .nav-bottom {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 0;
+            z-index: 1000;
+            left: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .nav-link {
+            color: black;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-icon {
+            font-size: 1.25rem;
+            position: relative;
+        }
+
+        .nav-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s, left 0.3s;
+        }
+
+        .nav-item:hover .nav-icon::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .nav-item:hover .nav-link {
+            color: var(--accent-color);
+        }
+
+        .nav-item.active .nav-link {
+            color: var(--accent-color);
+        }
+
+        .nav-item.active .nav-icon::after {
+            width: 100%;
+            left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .header-fixed {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .challenges-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-fixed">
+        <h1>5s9 English - Challenge</h1>
+    </header>
+
+    <div class="container">
+        <section class="search-section">
+            <div class="search-container">
+                <i class="fas fa-search" style="color: white; margin-right: 0.5rem;"></i>
+                <input type="search" class="search-input" placeholder="Search challenges...">
+            </div>
+        </section>
+
+        <main class="challenges-grid">
+            <!-- Voice Challenge Card -->
+            <div class="challenge-card voice" onclick="window.location.href='voice.html'">
+                <div class="challenge-icon">
+                    <i class="fas fa-microphone"></i>
+                </div>
+                <h2 class="challenge-title">Voice Challenge</h2>
+                <p class="challenge-description">Practice your pronunciation with interactive flashcards and real-time feedback.</p>
+                <div class="challenge-stats">
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span>4.8/5.0</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <span>2.3k users</span>
+                    </div>
+                </div>
+                <div class="challenge-tags">
+                    <span class="tag">Pronunciation</span>
+                    <span class="tag">Speaking</span>
+                    <span class="tag">Interactive</span>
+                </div>
+            </div>
+
+            <!-- Quiz Challenge Card -->
+            <div class="challenge-card quiz" onclick="window.location.href='quiz.html'">
+                <div class="challenge-icon">
+                    <i class="fas fa-puzzle-piece"></i>
+                </div>
+                <h2 class="challenge-title">Quiz Trial</h2>
+                <p class="challenge-description">Test your knowledge with daily quizzes covering grammar, vocabulary, and more.</p>
+                <div class="challenge-stats">
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span>4.6/5.0</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <span>1.8k users</span>
+                    </div>
+                </div>
+                <div class="challenge-tags">
+                    <span class="tag">Grammar</span>
+                    <span class="tag">Vocabulary</span>
+                    <span class="tag">Daily</span>
+                </div>
+            </div>
+
+            <!-- Writing Challenge Card -->
+            <div class="challenge-card writing" onclick="window.location.href='writing.html'">
+                <div class="challenge-icon">
+                    <i class="fas fa-pen-fancy"></i>
+                </div>
+                <h2 class="challenge-title">Writing Practice</h2>
+                <p class="challenge-description">Improve your writing skills with guided exercises and personalized feedback.</p>
+                <div class="challenge-stats">
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span>4.7/5.0</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <span>1.5k users</span>
+                    </div>
+                </div>
+                <div class="challenge-tags">
+                    <span class="tag">Writing</span>
+                    <span class="tag">Essays</span>
+                    <span class="tag">Feedback</span>
+                </div>
+            </div>
+
+            <!-- Listening Challenge Card -->
+            <div class="challenge-card listening" onclick="window.location.href='hearing.html'">
+                <div class="challenge-icon">
+                    <i class="fas fa-headphones"></i>
+                </div>
+                <h2 class="challenge-title">Listening Quest</h2>
+                <p class="challenge-description">Enhance your listening comprehension with audio exercises and transcription practice.</p>
+                <div class="challenge-stats">
+                    <div class="stat">
+                        <i class="fas fa-star"></i>
+                        <span>4.5/5.0</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-users"></i>
+                        <span>1.2k users</span>
+                    </div>
+                </div>
+                <div class="challenge-tags">
+                    <span class="tag">Listening</span>
+                    <span class="tag">Comprehension</span>
+                    <span class="tag">Audio</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <nav class="nav-bottom">
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="level.html" class="nav-link">
+                    <i class="fas fa-graduation-cap nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-compass nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="favorites.html" class="nav-link">
+                    <i class="fas fa-heart nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-user nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <script>
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        const challengeCards = document.querySelectorAll('.challenge-card');
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            challengeCards.forEach(card => {
+                const title = card.querySelector('.challenge-title').textContent.toLowerCase();
+                const description = card.querySelector('.challenge-description').textContent.toLowerCase();
+                const tags = Array.from(card.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
+                
+                const matches = title.includes(searchTerm) || 
+                              description.includes(searchTerm) || 
+                              tags.some(tag => tag.includes(searchTerm));
+                
+                card.style.display = matches ? 'block' : 'none';
+            });
+        });
+
+        // Card hover effects
+        challengeCards.forEach(card => {
+            card.addEventListener('mouseover', () => {
+                card.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseout', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Navigation active state 
+const navItems = document.querySelectorAll('.nav-item');
+
+navItems.forEach(item => {
+    item.addEventListener('click', () => {
+        // Remove active class from all items
+        navItems.forEach(navItem => {
+            navItem.classList.remove('active');
+        });
+        
+        // Add active class to clicked item
+        item.classList.add('active');
+    });
+});
+
+// Header scroll effect
+const header = document.querySelector('.header-fixed');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        header.style.background = 'rgba(255, 255, 255, 0.3)';
+    } else {
+        header.style.background = 'rgba(255, 255, 255, 0.2)';
+    }
+});
+
+// Card click handler
+challengeCards.forEach(card => {
+    card.addEventListener('click', () => {
+        const challengeType = card.classList[1]; // Gets 'voice', 'quiz', etc.
+        // You can add navigation logic here
+        console.log(`Navigating to ${challengeType} challenge`);
+    });
+});
+
+// Handle search clear
+searchInput.addEventListener('keyup', (e) => {
+    if (e.key === 'Escape') {
+        searchInput.value = '';
+        challengeCards.forEach(card => {
+            card.style.display = 'block';
+        });
+    }
+});
+    </script>
+</body>
+</html>

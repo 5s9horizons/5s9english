@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Practice your pronunciation with interactive flashcards">
+  <title>5s9 English | Voice Cards</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #4CAF50;
+      --accent-color: #1976D2;
+      --error-color: #f44336;
+      --text-primary: #333;
+      --text-secondary: #666;
+      --background-gradient: linear-gradient(135deg, navy 0%, #a400ff 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      font-size: 16px;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      background: var(--background-gradient);
+      display: grid;
+      place-items: center;
+      padding: 1.25rem;
+      height: 100%;
+    }
+
+    .progress-bar {
+      width: 90%;
+      max-width: 350px;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary-color);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .flashcard-container {
+      width: 90%;
+      max-width: 350px;
+      height: calc(100vh - 8.75rem);
+      margin-bottom: 5rem;
+    }
+
+    .flashcard {
+      height: 100%;
+      background: #fff;
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: #f8f9fa;
+      border-radius: 1.25rem;
+    }
+
+    .icon-button {
+      background: none;
+      border: none;
+      padding: 0.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      color: var(--text-primary);
+    }
+
+    .icon-button:hover {
+      transform: scale(1.1);
+      background: rgba(0,0,0,0.05);
+    }
+
+    .icon-button:focus-visible {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+
+    .practice-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.625rem;
+      margin: 1rem 0;
+    }
+
+    .practice-btn {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .practice-btn:hover:not(:disabled) {
+      background: #45a049;
+    }
+
+    .practice-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .practice-btn.listening {
+      background: var(--error-color);
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.938rem;
+    }
+
+    .controls button {
+      background: #ffd700;
+      color: navy;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .controls button:hover:not(:disabled) {
+      background: var(--accent-color);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-fill"></div>
+  </div>
+
+  <main class="flashcard-container">
+    <div class="flashcard">
+      <div class="card-header">
+        <span class="card-counter" aria-live="polite">Card 1 of 3</span>
+        <div class="card-actions">
+          <button class="icon-button" aria-label="Share flashcard" onclick="sharePage()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+          </button>
+          <button class="icon-button" aria-label="Toggle favorite" onclick="toggleFavorite(this)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="flashcard-content">
+        <p id="practice-text" class="practice-text" aria-live="polite"></p>
+        
+        <div class="practice-buttons">
+          <button class="practice-btn" id="playButton" aria-label="Play pronunciation">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Play
+          </button>
+          <button class="practice-btn" id="recordButton" aria-label="Record your pronunciation">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+            Start Reading
+          </button>
+        </div>
+
+        <div class="result-section" aria-live="polite">
+          <output id="userSpeech">[Your speech will appear here]</output>
+          <output id="comparisonResult">[Score will appear here]</output>
+          <div id="scoreStatus" class="score-status pending">
+            Try to achieve 95% accuracy to proceed
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <nav class="controls">
+    <button id="prevBtn" aria-label="Previous card">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M15 18l-6-6 6-6"/>
+  </svg>
+  Previous
+</button>
+<button id="nextBtn" aria-label="Next card">
+  Next
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M9 18l6-6-6-6"/>
+  </svg>
+</button>
+  </nav>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.js" defer></script>
+<script>
+  // Constants
+const PASSING_SCORE = 85;
+
+// State management
+let currentCard = 0;
+let currentScore = 0;
+
+const cards = [
+  {
+    text: "The quick brown fox jumps over the lazy dog.",
+    passed: false
+  },
+  {
+    text: "She sells seashells by the seashore.",
+    passed: false
+  },
+  {
+    text: "How much wood would a woodchuck chuck if a woodchuck could chuck wood?",
+    passed: false
+  }
+];
+
+// DOM Elements
+const elements = {
+  practiceText: document.getElementById("practice-text"),
+  playButton: document.getElementById("playButton"),
+  recordButton: document.getElementById("recordButton"),
+  userSpeech: document.getElementById("userSpeech"),
+  comparisonResult: document.getElementById("comparisonResult"),
+  scoreStatus: document.getElementById("scoreStatus"),
+  prevBtn: document.getElementById("prevBtn"),
+  nextBtn: document.getElementById("nextBtn"),
+  counter: document.querySelector(".card-counter"),
+  progressFill: document.querySelector(".progress-fill")
+};
+
+// Card Management
+function updateCard() {
+  elements.practiceText.textContent = cards[currentCard].text;
+  elements.userSpeech.textContent = "[Your speech will appear here]";
+  elements.comparisonResult.textContent = "[Score will appear here]";
+  elements.counter.textContent = `Card ${currentCard + 1} of ${cards.length}`;
+  elements.progressFill.style.width = `${((currentCard + 1) / cards.length) * 100}%`;
+
+  currentScore = 0;
+  updateScoreStatus();
+  updateButtons();
+}
+
+function updateScoreStatus() {
+  if (currentScore >= PASSING_SCORE) {
+    elements.scoreStatus.className = "score-status success";
+    elements.scoreStatus.textContent = `Congratulations! You can proceed to the next exercise.`;
+    cards[currentCard].passed = true;
+  } else {
+    elements.scoreStatus.className = "score-status pending";
+    elements.scoreStatus.textContent = `Try to achieve ${PASSING_SCORE}% accuracy to proceed to the next exercise.`;
+  }
+}
+
+function nextCard() {
+  if (currentCard < cards.length - 1 && currentScore >= PASSING_SCORE) {
+    currentCard++;
+    updateCard();
+  }
+}
+
+function prevCard() {
+  if (currentCard > 0) {
+    currentCard--;
+    updateCard();
+  }
+}
+
+// Speech Recognition
+function initializeSpeechRecognition() {
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = "en-US";
+  return recognition;
+}
+
+function handleSpeechRecognitionResult(event) {
+  const transcript = event.results[0][0].transcript;
+  elements.userSpeech.textContent = transcript;
+
+  const similarity = compareStrings(cards[currentCard].text, transcript);
+  currentScore = similarity * 100;
+  elements.comparisonResult.textContent = `${currentScore.toFixed(2)}% accurate`;
+
+  updateScoreStatus();
+  updateButtons();
+}
+
+function resetRecordButton() {
+  elements.recordButton.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      <line x1="12" y1="19" x2="12" y2="23"/>
+      <line x1="8" y1="23" x2="16" y2="23"/>
+    </svg>
+    Start Reading
+  `;
+  elements.recordButton.classList.remove("listening");
+}
+
+// Utility Functions
+function compareStrings(str1, str2) {
+  const words1 = str1.toLowerCase().split(" ");
+  const words2 = str2.toLowerCase().split(" ");
+  let matches = 0;
+
+  words1.forEach((word, index) => {
+    if (word === words2[index]) {
+      matches++;
+    }
+  });
+
+  return matches / Math.max(words1.length, words2.length);
+}
+
+function updateButtons() {
+  elements.prevBtn.disabled = currentCard === 0;
+  elements.nextBtn.disabled = currentCard === cards.length - 1;
+}
+
+// Favorites Management
+function initializeFavorites() {
+  // Create URL with card index
+  const urlWithCard = `${window.location.href.split('#')[0]}#card=${currentCard}`;
+  const favorites = JSON.parse(localStorage.getItem("favorites") || "{}");
+  
+  if (favorites[urlWithCard]) {
+    const heartIcon = document.querySelector(".card-header button:last-child svg");
+    heartIcon.setAttribute("fill", "#2ecc71");
+  }
+}
+
+function toggleFavorite(button) {
+  const heartIcon = button.querySelector("svg");
+  const baseUrl = window.location.href.split('#')[0];
+  const urlWithCard = `${baseUrl}#card=${currentCard}`;
+  const pageTitle = `${document.title} - Card ${currentCard + 1}`;
+  
+  let favorites = JSON.parse(localStorage.getItem("favorites") || "{}");
+  
+  if (favorites[urlWithCard]) {
+    delete favorites[urlWithCard];
+    heartIcon.setAttribute("fill", "none");
+  } else {
+    favorites[urlWithCard] = {
+      title: pageTitle,
+      url: urlWithCard,
+      cardIndex: currentCard,
+      timestamp: new Date().toISOString()
+    };
+    heartIcon.setAttribute("fill", "#2ecc71");
+  }
+  
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+
+// Share Functionality
+function sharePage() {
+  const pageTitle = `${document.title} - Card ${currentCard + 1}`;
+  const baseUrl = window.location.href.split('#')[0];
+  const urlWithCard = `${baseUrl}#card=${currentCard}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: pageTitle,
+      url: urlWithCard
+    }).catch(console.error);
+  } else {
+    try {
+      navigator.clipboard.writeText(urlWithCard);
+      alert("Link copied to clipboard!");
+    } catch (err) {
+      alert("Unable to share or copy link");
+    }
+  }
+}
+
+// Event Listeners
+function initializeEventListeners() {
+  // Text-to-Speech
+  elements.playButton.addEventListener("click", () => {
+    const utterance = new SpeechSynthesisUtterance(cards[currentCard].text);
+    speechSynthesis.speak(utterance);
+  });
+
+  // Speech-to-Text
+  elements.recordButton.addEventListener("click", () => {
+    const recognition = initializeSpeechRecognition();
+    
+    recognition.start();
+    elements.recordButton.textContent = "Listening...";
+    elements.recordButton.classList.add("listening");
+
+    recognition.onresult = handleSpeechRecognitionResult;
+    recognition.onspeechend = () => {
+      recognition.stop();
+      resetRecordButton();
+    };
+    recognition.onerror = (event) => {
+      elements.userSpeech.textContent = "Error: " + event.error;
+      resetRecordButton();
+    };
+  });
+
+  // Navigation Buttons
+  elements.prevBtn.addEventListener("click", prevCard);
+  
+  elements.nextBtn.addEventListener("click", () => {
+    if (currentScore < PASSING_SCORE) {
+      Toastify({
+        text: `Please achieve at least ${PASSING_SCORE}% accuracy to proceed`,
+        duration: 3000,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "#f44336"
+      }).showToast();
+    } else if (currentCard < cards.length - 1) {
+      nextCard();
+      Toastify({
+        text: "Great job! Moving to next card",
+        duration: 3000,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "#4CAF50"
+      }).showToast();
+    }
+  });
+}
+
+// Initialize Application
+document.addEventListener("DOMContentLoaded", () => {
+  // Check for card index in URL
+  const hashParams = new URLSearchParams(window.location.hash.slice(1));
+  const cardIndex = hashParams.get('card');
+  if (cardIndex !== null) {
+    const index = parseInt(cardIndex);
+    if (index >= 0 && index < cards.length) {
+      currentCard = index;
+    }
+  }
+  
+  initializeFavorites();
+  initializeEventListeners();
+  updateCard();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5s9 English | Dashboard</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --accent-color: #1976D2;
+            --error-color: #f44336;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --background-gradient: linear-gradient(135deg, navy 0%, #a400ff 100%);
+            --card-background: rgba(255, 255, 255, 0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--background-gradient);
+            padding: 1.25rem;
+            padding-bottom: 5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 3rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .header-fixed h1 {
+            color: darkblue;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .main-content {
+            margin-top: 5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+            padding: 1rem 0;
+        }
+
+        .dashboard-card {
+            background: var(--card-background);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .practice-section {
+            display: none;
+            background: var(--card-background);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 1rem;
+        }
+
+        .practice-section.active {
+            display: block;
+        }
+
+        .word-display {
+            font-size: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--text-primary);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .option-btn {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Navigation */
+        .nav-bottom {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 0;
+            z-index: 1000;
+            left: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .nav-link {
+            color: black;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-icon {
+            font-size: 1.25rem;
+            position: relative;
+        }
+
+        .nav-item.active .nav-link {
+            color: var(--accent-color);
+        }
+        
+        .nav-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s, left 0.3s;
+        }
+
+        .nav-item:hover .nav-icon::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .nav-item:hover .nav-link {
+            color: var(--accent-color);
+        }
+
+        .nav-item.active .nav-link {
+            color: var(--accent-color);
+        }
+
+        .nav-item.active .nav-icon::after {
+            width: 100%;
+            left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-fixed {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-fixed">
+        <h1>5s9 English - Dashboard</h1>
+    </header>
+    <!-- Main content area with cards -->
+    <div class="container" id="mainContainer">
+        <!-- Content will be dynamically inserted by JavaScript -->
+    </div>
+    
+    <nav class="nav-bottom">
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="level.html" class="nav-link">
+                    <i class="fas fa-graduation-cap nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="challenge.html" class="nav-link">
+                    <i class="fas fa-compass nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="favorites.html" class="nav-link">
+                    <i class="fas fa-heart nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-user nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <script>
+        // Initialize local storage data structure
+        const initializeData = () => {
+            if (!localStorage.getItem('englishDashboardData')) {
+                const initialData = {
+                    streak: 0,
+                    wordsLearned: 0,
+                    xp: 0,
+                    accuracy: 0,
+                    lastLogin: new Date().toDateString(),
+                    weeklyProgress: [10, 20, 15, 25, 30, 20, 35],
+                    practiceWords: [
+                        { word: 'Ubiquitous', meaning: 'Present everywhere' },
+                        { word: 'Ephemeral', meaning: 'Lasting for a very short time' },
+                        { word: 'Gregarious', meaning: 'Fond of company; sociable' }
+                    ],
+                    skillLevels: {
+                        reading: 75,
+                        listening: 60,
+                        speaking: 50,
+                        writing: 55
+                    }
+                };
+                localStorage.setItem('englishDashboardData', JSON.stringify(initialData));
+            }
+            return JSON.parse(localStorage.getItem('englishDashboardData'));
+        };
+
+        // Main dashboard rendering function
+        const renderDashboard = () => {
+            const data = initializeData();
+            const container = document.getElementById('mainContainer');
+            
+            container.innerHTML = `
+                <main class="main-content">
+                    <!-- Progress Card -->
+                    <div class="dashboard-card">
+                        <h2 class="card-title">
+                            <i class="fas fa-chart-line"></i>
+                            Global Progress
+                        </h2>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: ${data.accuracy}%"></div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <strong>XP Points</strong>
+                                <p>${data.xp}</p>
+                            </div>
+                            <div class="stat-item">
+                                <strong>Words Learned</strong>
+                                <p>${data.wordsLearned}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills Card -->
+                    <div class="dashboard-card">
+                        <h2 class="card-title">
+                            <i class="fas fa-graduation-cap"></i>
+                            Language Skills
+                        </h2>
+                        <div class="stats-grid">
+                            ${Object.entries(data.skillLevels).map(([skill, level]) => `
+                                <div class="stat-item">
+                                    <strong>${skill.charAt(0).toUpperCase() + skill.slice(1)}</strong>
+                                    <div class="progress-container">
+                                        <div class="progress-bar" style="width: ${level}%"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </main>
+            `;
+        };
+
+
+        // Initialize dashboard on load
+        document.addEventListener('DOMContentLoaded', renderDashboard);
+    </script>
+</body>
+</html>

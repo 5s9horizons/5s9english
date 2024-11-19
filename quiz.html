@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Learning Quiz</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f39c12;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --background-gradient: linear-gradient(135deg, navy 0%, #a400ff 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--background-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h1 {
+            background: var(--background-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: var(--background-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .option:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .option.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .option.wrong {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .result-container {
+            text-align: center;
+            display: none;
+        }
+
+        .score {
+            font-size: 2em;
+            background: var(--background-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .feedback {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: var(--background-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .animate__animated {
+            animation-duration: 0.5s;
+        }
+
+        @media (max-width: 480px) {
+            .quiz-container {
+                padding: 20px;
+            }
+
+            .quiz-header h1 {
+                font-size: 2em;
+            }
+
+            .question {
+                font-size: 1.1em;
+            }
+
+            .option {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container animate__animated animate__fadeIn">
+        <div class="quiz-header">
+            <h1>English Quiz</h1>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <div class="question"></div>
+            <div class="options"></div>
+        </div>
+
+        <div class="result-container">
+            <div class="score"></div>
+            <div class="feedback"></div>
+            <button class="btn" onclick="restartQuiz()">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Choose the correct form of the verb:",
+                text: "She _____ to the store yesterday.",
+                options: ["go", "goes", "went", "gone"],
+                correct: 2
+            },
+            {
+                question: "Select the correct synonym:",
+                text: "The word 'ENORMOUS' means:",
+                options: ["tiny", "huge", "beautiful", "fast"],
+                correct: 1
+            },
+            {
+                question: "Identify the correct article:",
+                text: "I saw _____ eagle flying in the sky.",
+                options: ["a", "an", "the", "no article needed"],
+                correct: 1
+            },
+            {
+                question: "Choose the correct preposition:",
+                text: "The book is _____ the table.",
+                options: ["in", "on", "at", "by"],
+                correct: 1
+            },
+            {
+                question: "Select the correct plural form:",
+                text: "One child, two _____.",
+                options: ["childs", "childes", "children", "child"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.querySelector('.question').innerHTML = `
+                <h2 class="animate__animated animate__fadeIn">${question.question}</h2>
+                <p class="animate__animated animate__fadeIn">${question.text}</p>
+            `;
+
+            const optionsHtml = question.options.map((option, index) => `
+                <div class="option animate__animated animate__fadeInUp" 
+                     style="animation-delay: ${index * 0.1}s"
+                     onclick="checkAnswer(${index})">
+                    ${option}
+                </div>
+            `).join('');
+
+            document.querySelector('.options').innerHTML = optionsHtml;
+            updateProgress();
+        }
+
+        function checkAnswer(selectedIndex) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+
+            options[question.correct].classList.add('correct', 'animate__animated', 'animate__pulse');
+
+            if (selectedIndex === question.correct) {
+                score++;
+                options[selectedIndex].classList.add('correct', 'animate__animated', 'animate__pulse');
+            } else {
+                options[selectedIndex].classList.add('wrong', 'animate__animated', 'animate__shakeX');
+            }
+
+            setTimeout(() => {
+                currentQuestion++;
+                canAnswer = true;
+
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                } else {
+                    showResult();
+                }
+            }, 1500);
+        }
+
+        function updateProgress() {
+            const progress = (currentQuestion / questions.length) * 100;
+            document.querySelector('.progress').style.width = `${progress}%`;
+        }
+
+        function showResult() {
+            const percentage = (score / questions.length) * 100;
+            const resultContainer = document.querySelector('.result-container');
+            const questionContainer = document.querySelector('.question-container');
+
+            questionContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+            resultContainer.classList.add('animate__animated', 'animate__fadeIn');
+
+            document.querySelector('.score').textContent = `Score: ${score}/${questions.length} (${percentage}%)`;
+            
+            let feedback;
+            if (percentage === 100) {
+                feedback = "Perfect! You're a grammar master! 🏆";
+            } else if (percentage >= 80) {
+                feedback = "Great job! Keep up the good work! 👏";
+            } else if (percentage >= 60) {
+                feedback = "Good effort! Practice makes perfect! 💪";
+            } else {
+                feedback = "Keep studying! You'll improve! 📚";
+            }
+
+            document.querySelector('.feedback').textContent = feedback;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            canAnswer = true;
+
+            const resultContainer = document.querySelector('.result-container');
+            const questionContainer = document.querySelector('.question-container');
+
+            resultContainer.style.display = 'none';
+            questionContainer.style.display = 'block';
+
+            showQuestion();
+        }
+
+        // Start the quiz
+        showQuestion();
+    </script>
+</body>
+</html>

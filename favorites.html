@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="5s9 English - Improve your English skills">
+    <title>5s9 English | Favorites</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --accent-color: #1976D2;
+            --error-color: #f44336;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --background-gradient: linear-gradient(135deg, navy 0%, #a400ff 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            background: var(--background-gradient);
+            padding: 1.25rem;
+            padding-bottom: 5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);  /* Increased opacity */
+            backdrop-filter: blur(10px);
+            padding: 1rem 1rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 3rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .header-fixed h1 {
+            color: darkblue;
+            font-size: 1.5rem;
+            margin: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Favorites Specific Styles */
+        .favorites-grid {
+            margin-top: 5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.25rem;
+            padding: 1rem 0;
+        }
+
+        .favorite-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .favorite-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 1.25rem;
+        }
+
+        .timestamp {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .icon-button:hover {
+            transform: scale(1.1);
+            background: rgba(0,0,0,0.05);
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .empty-state h2 {
+            margin-bottom: 1rem;
+        }
+
+        .empty-state a {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .nav-bottom {
+            background: rgba(255, 255, 255, 0.2);  /* Increased opacity */
+            backdrop-filter: blur(10px);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+            padding: 1rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Navigation */
+        .nav-bottom {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 0;
+            z-index: 1000;
+            left: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .nav-link {
+            color: black;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-icon {
+            font-size: 1.25rem;
+            position: relative;
+        }
+
+        .nav-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s, left 0.3s;
+        }
+
+        .nav-item:hover .nav-icon::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .nav-item:hover .nav-link {
+            color: var(--accent-color);
+        }
+
+        .nav-item.active .nav-link {
+            color: var(--accent-color);
+        }
+
+        .nav-item.active .nav-icon::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* Responsive Styles */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-fixed {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .favorites-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .practice-type {
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    background: rgba(25, 118, 210, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    margin-right: 0.5rem;
+}
+
+.card-metadata {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-preview {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+.empty-state-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.practice-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s ease;
+}
+
+.practice-link:hover {
+    background: var(--primary-color);
+}
+
+.error-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--error-color);
+}
+    </style>
+</head>
+<body>
+    <header class="header-fixed">
+        <h1>5s9 English - Favorites</h1>
+    </header>
+
+    <div class="container">
+        <div id="favoritesContainer" class="favorites-grid">
+            <!-- Favorites will be populated here -->
+        </div>
+    </div>
+
+    <!-- Modified Navigation -->
+    <nav class="nav-bottom">
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="level.html" class="nav-link">
+                    <i class="fas fa-graduation-cap nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="challenge.html" class="nav-link">
+                    <i class="fas fa-compass nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-heart nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-user nav-icon"></i>
+                    <span></span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.js"></script>
+    <script>
+        function loadFavorites() {
+    const favoritesContainer = document.getElementById('favoritesContainer');
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+    
+    if (Object.keys(favorites).length === 0) {
+        showEmptyState();
+        return;
+    }
+
+    const sortedFavorites = Object.entries(favorites)
+        .sort(([, a], [, b]) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    favoritesContainer.innerHTML = sortedFavorites
+        .map(([url, data]) => createFavoriteCard(url, data))
+        .join('');
+}
+
+function showEmptyState() {
+    const favoritesContainer = document.getElementById('favoritesContainer');
+    favoritesContainer.innerHTML = `
+        <div class="empty-state">
+            <h2>No favorites yet</h2>
+            <p>Start adding some items to your favorites to see them here!</p>
+            <div class="empty-state-links">
+                <a href="voice.html" class="practice-link">Go to Voice Practice</a>
+                <a href="hearing.html" class="practice-link">Go to Hearing Practice</a>
+                <a href="writing.html" class="practice-link">Go to Writing Practice</a>
+            </div>
+        </div>
+    `;
+}
+
+function getPracticeTypeFromUrl(url) {
+    if (url.includes('hearing.html')) return 'Hearing Practice';
+    if (url.includes('voice.html')) return 'Voice Practice';
+    if (url.includes('writing.html')) return 'Writing Practice';
+    return 'Practice';
+}
+
+function getItemIndex(data) {
+    // Handle both card-based and exercise-based indices
+    return data.cardIndex !== undefined ? data.cardIndex : 
+           data.exerciseIndex !== undefined ? data.exerciseIndex : 0;
+}
+
+function createFavoriteCard(url, data) {
+    const practiceType = getPracticeTypeFromUrl(url);
+    const timestamp = new Date(data.timestamp);
+    const formattedDate = timestamp.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    const itemIndex = getItemIndex(data);
+    const itemType = practiceType === 'Writing Practice' ? 'Exercise' : 'Card';
+    const displayTitle = `5s9 English | ${practiceType} - ${itemType} ${itemIndex + 1}`;
+
+    return `
+        <div class="favorite-card">
+            <div class="card-header">
+                <div class="card-metadata">
+                    <span class="practice-type">${practiceType}</span>
+                    <span class="timestamp">${formattedDate}</span>
+                </div>
+                <div class="card-actions">
+                    <button class="icon-button share-button" 
+                            onclick="shareItem('${url}', '${displayTitle}')" 
+                            aria-label="Share"
+                            title="Share">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                            <polyline points="16 6 12 2 8 6"></polyline>
+                            <line x1="12" y1="2" x2="12" y2="15"></line>
+                        </svg>
+                    </button>
+                    <button class="icon-button" 
+                            onclick="removeFavorite('${url}')" 
+                            aria-label="Remove from favorites"
+                            title="Remove from favorites">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#2ecc71" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <a href="${url}" class="card-link">
+                <h2>${displayTitle}</h2>
+                <div class="card-preview">
+                    ${itemType} ${itemIndex + 1}
+                    ${data.title ? `<br><small>${data.title}</small>` : ''}
+                </div>
+            </a>
+        </div>
+    `;
+}
+
+function shareItem(url, title) {
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            url: url
+        }).catch(console.error);
+    } else {
+        try {
+            navigator.clipboard.writeText(url);
+            showToast("Link copied to clipboard!");
+        } catch (err) {
+            showToast("Unable to share or copy link", false);
+        }
+    }
+}
+
+function showToast(message, success = true) {
+    Toastify({
+        text: message,
+        duration: 3000,
+        gravity: "top",
+        position: "center",
+        backgroundColor: success ? "#4CAF50" : "#f44336"
+    }).showToast();
+}
+
+function removeFavorite(url) {
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '{}');
+    const itemData = favorites[url];
+    const practiceType = getPracticeTypeFromUrl(url).toLowerCase();
+    
+    delete favorites[url];
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    
+    showToast(`Removed ${practiceType} item from favorites`, false);
+    loadFavorites();
+}
+
+function handleFavoritesError(error) {
+    console.error('Error loading favorites:', error);
+    const favoritesContainer = document.getElementById('favoritesContainer');
+    favoritesContainer.innerHTML = `
+        <div class="error-state">
+            <h2>Oops! Something went wrong</h2>
+            <p>Unable to load favorites. Please try refreshing the page.</p>
+        </div>
+    `;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        loadFavorites();
+    } catch (error) {
+        handleFavoritesError(error);
+    }
+});
+    </script>
+</body>
+</html>
