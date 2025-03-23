@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="5s9 English - Beginner Level Lessons">
+    <title>5s9 English | Beginner Level</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --accent-color: #1976D2;
+            --beginner-gradient: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            --text-primary: #333;
+            --text-secondary: #666;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            background: var(--beginner-gradient);
+            padding: 1.25rem;
+            padding-bottom: 5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 4rem auto 0;
+        }
+
+        .header-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 3rem;
+        }
+
+        .header-fixed h1 {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .lesson-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .lesson-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .lesson-number {
+            background: var(--primary-color);
+            color: white;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .lesson-title {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .lesson-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .lesson-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .lesson-duration {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lesson-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--primary-color);
+        }
+
+        .lesson-status.locked {
+            background: rgba(158, 158, 158, 0.1);
+            color: #9E9E9E;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin-top: 3rem;
+            }
+            
+            .lessons-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-fixed">
+        <h1>Beginner Level</h1>
+    </header>
+
+    <div class="container">
+        <main class="lessons-grid">
+            <!-- Lesson 1 -->
+            <div class="lesson-card" onclick="window.location.href='lessons/greetings.html'" style="cursor: pointer;">
+                <div class="lesson-header">
+                    <div class="lesson-number">1</div>
+                    <h2 class="lesson-title">Basic Greetings</h2>
+                </div>
+                <p class="lesson-description">Learn common greetings and introductions used in everyday English conversations.</p>
+                <div class="lesson-meta">
+                    <div class="lesson-duration">
+                        <i class="fas fa-clock"></i>
+                        <span>15 minutes</span>
+                    </div>
+                    <div class="lesson-status">Available</div>
+                </div>
+            </div>
+
+            <!-- Lesson 2 -->
+            <div class="lesson-card" onclick="checkAndNavigate('lesson1_complete', 'lessons/numbers.html')" style="cursor: pointer;">
+                <div class="lesson-header">
+                    <div class="lesson-number">2</div>
+                    <h2 class="lesson-title">Numbers & Counting</h2>
+                </div>
+                <p class="lesson-description">Master numbers 1-100 and basic counting in English.</p>
+                <div class="lesson-meta">
+                    <div class="lesson-duration">
+                        <i class="fas fa-clock"></i>
+                        <span>20 minutes</span>
+                    </div>
+                    <div class="lesson-status locked">Complete Lesson 1 first</div>
+                </div>
+            </div>
+
+            <!-- Lesson 3 -->
+            <div class="lesson-card" onclick="checkAndNavigate('lesson2_complete', 'lessons/simple-present.html')" style="cursor: pointer;">
+                <div class="lesson-header">
+                    <div class="lesson-number">3</div>
+                    <h2 class="lesson-title">Simple Present Tense</h2>
+                </div>
+                <p class="lesson-description">Learn how to form and use the simple present tense in English.</p>
+                <div class="lesson-meta">
+                    <div class="lesson-duration">
+                        <i class="fas fa-clock"></i>
+                        <span>25 minutes</span>
+                    </div>
+                    <div class="lesson-status locked">Complete Lesson 2 first</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="floating-back-button.js" defer></script>
+    <script>
+        function checkAndNavigate(requirement, path) {
+            const isCompleted = localStorage.getItem(requirement) === 'true';
+            if (isCompleted) {
+                window.location.href = path;
+            }
+        }
+    </script>
+</body>
+</html>

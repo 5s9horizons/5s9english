@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Greetings | 5s9 English</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --accent-color: #1976D2;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --background-color: #f5f5f5;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --hover-transform: translateY(-2px);
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--background-color);
+            color: var(--text-primary);
+        }
+
+        .header-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .lesson-container {
+            max-width: 800px;
+            margin: 5rem auto 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            background: #f9f9f9;
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: var(--hover-transform);
+        }
+
+        .example-card {
+            background: white;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0 1rem 1rem 0;
+            box-shadow: var(--card-shadow);
+        }
+
+        .greeting-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 0.5rem;
+            background: #f8f9fa;
+            transition: all 0.2s ease;
+        }
+
+        .greeting-item:hover {
+            background: #e9ecef;
+            transform: var(--hover-transform);
+        }
+
+        .greeting-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+        }
+
+        .greeting-content {
+            flex: 1;
+        }
+
+        .time-indicator {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--primary-color);
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            margin-left: 0.5rem;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-color);
+            transform: var(--hover-transform);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--primary-color);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .practice-button {
+            display: block;
+            width: 100%;
+            padding: 1.25rem;
+            margin: 2rem 0;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+
+        .practice-button:hover {
+            transform: var(--hover-transform);
+            background: #43a047;
+        }
+    </style>
+</head>
+<body>
+    <header class="header-fixed">
+        <h1><i class="fas fa-graduation-cap"></i> Basic Greetings</h1>
+        <span>Lesson 1 - A0 Level</span>
+    </header>
+
+    <div class="lesson-container">
+        <section class="section">
+            <h2><i class="fas fa-bullseye"></i> Learning Objectives</h2>
+            <div class="greeting-item">
+                <div class="greeting-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="greeting-content">
+                    Master basic English greetings for everyday situations
+                </div>
+            </div>
+            <div class="greeting-item">
+                <div class="greeting-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="greeting-content">
+                    Learn when to use different greetings throughout the day
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-book"></i> Essential Greetings</h2>
+            
+            <div class="example-card">
+                <h3><i class="fas fa-user-tie"></i> Formal Greetings</h3>
+                <div class="greeting-item">
+                    <div class="greeting-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="greeting-content">
+                        <strong>"Good morning"</strong>
+                        <span class="time-indicator">Before 12:00 PM</span>
+                        <p>Used in professional settings and with people you don't know well</p>
+                    </div>
+                </div>
+                <div class="greeting-item">
+                    <div class="greeting-icon">
+                        <i class="fas fa-cloud-sun"></i>
+                    </div>
+                    <div class="greeting-content">
+                        <strong>"Good afternoon"</strong>
+                        <span class="time-indicator">12:00 PM - 6:00 PM</span>
+                        <p>Common in business and formal situations</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="example-card">
+                <h3><i class="fas fa-user-friends"></i> Casual Greetings</h3>
+                <div class="greeting-item">
+                    <div class="greeting-icon">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <div class="greeting-content">
+                        <strong>"Hi"</strong>
+                        <p>Friendly greeting for any time of day</p>
+                    </div>
+                </div>
+                <div class="greeting-item">
+                    <div class="greeting-icon">
+                        <i class="fas fa-hand-peace"></i>
+                    </div>
+                    <div class="greeting-content">
+                        <strong>"Hey"</strong>
+                        <p>Very casual, best for friends and family</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-chalkboard-teacher"></i> Interactive Practice</h2>
+            <h3><i class="fas fa-volume-up"></i> Repetition Exercise (Call and Response)</h3>
+            <p>Read the following greetings out loud and repeat them:</p>
+            <div class="greeting-item">
+                <div class="greeting-icon">
+                    <i class="fas fa-sun"></i>
+                </div>
+                <div class="greeting-content">
+                    <strong>"Good morning"</strong>
+                </div>
+            </div>
+            <div class="greeting-item">
+                <div class="greeting-icon">
+                    <i class="fas fa-cloud-sun"></i>
+                </div>
+                <div class="greeting-content">
+                    <strong>"Good afternoon"</strong>
+                </div>
+            </div>
+            <div class="greeting-item">
+                <div class="greeting-icon">
+                    <i class="fas fa-smile"></i>
+                </div>
+                <div class="greeting-content">
+                    <strong>"Hi"</strong>
+                </div>
+            </div>
+            <div class="greeting-item">
+                <div class="greeting-icon">
+                    <i class="fas fa-hand-peace"></i>
+                </div>
+                <div class="greeting-content">
+                    <strong>"Hey"</strong>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-puzzle-piece"></i> Matching Game</h3>
+            <p>Match the greeting to the correct time of day:</p>
+            <div class="quiz-question">
+                <p>What do you say at 7 AM?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, 'incorrect')">Good evening</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, 'correct')">Good morning</div>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>What do you say at 2 PM?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, 'correct')">Good afternoon</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, 'incorrect')">Good night</div>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-users"></i> Role-Play (Basic Conversation)</h3>
+            <p>Practice the following conversation:</p>
+            <div class="greeting-item">
+                <div class="greeting-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="greeting-content">
+                    <strong>Person A:</strong> Hello!
+                </div>
+            </div>
+            <div class="greeting-item">
+                <div class="greeting-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="greeting-content">
+                    <strong>Person B:</strong> Hello!
+                </div>
+            </div>
+            <div class="greeting-item">
+                <div class="greeting-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="greeting-content">
+                    <strong>Person A:</strong> Good morning!
+                </div>
+            </div>
+            <div class="greeting-item">
+                <div class="greeting-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="greeting-content">
+                    <strong>Person B:</strong> Good morning!
+                </div>
+            </div>
+        </section>
+
+        <section class="section quiz-section">
+            <h2><i class="fas fa-question-circle"></i> Mini Quiz</h2>
+            <div class="quiz-question">
+                <p>Choose the correct answer: “What do you say at 7 AM?”</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, 'incorrect')">Good evening</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, 'correct')">Good morning</div>
+                </div>
+            </div>
+            <div class="quiz-question">
+                <p>Fill in the blank: “___, my name is John.”</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, 'correct')">Hello</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, 'incorrect')">Good night</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-gamepad"></i> Fun Game</h2>
+            <p><i class="fas fa-th-large"></i> Greeting Bingo</p>
+            <p>Print out a bingo card with different greetings. Mark off each greeting as you hear it. First to get Bingo wins!</p>
+        </section>
+
+        <section class="section homework-section">
+            <h2><i class="fas fa-home"></i> Homework</h2>
+            <p>Watch a short video of English greetings.</p>
+            <p>Practice saying "Hello" and "Good morning" to family members.</p>
+        </section>
+
+        <button class="practice-button" onclick="window.location.href='greetings-eval.html'">
+            <i class="fas fa-check-circle"></i> Test Your Knowledge
+        </button>
+    </div>
+
+    <script src="../floating-back-button.js"></script>
+    <script>
+        // Enhanced answer checking with animation
+        function checkAnswer(element, status) {
+            element.classList.add(status);
+            element.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+            }, 200);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greetings Evaluation | 5s9 English</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --accent-color: #1976D2;
+            --error-color: #f44336;
+            --success-color: #4CAF50;
+            --text-primary: #333;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --hover-transform: translateY(-2px);
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+
+        .eval-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .question-card:hover {
+            transform: var(--hover-transform);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-number {
+            background: var(--primary-color);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .option-btn {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 0.75rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1rem;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            transform: var(--hover-transform);
+        }
+
+        .option-btn.correct {
+            border-color: var(--success-color);
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--error-color);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .result-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .score {
+            font-size: 3rem;
+            margin: 1rem 0;
+            color: var(--primary-color);
+        }
+
+        .feedback {
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .next-btn {
+            padding: 1rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            transform: var(--hover-transform);
+            background: #43a047;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar">
+        <div class="progress-fill" style="width: 0%"></div>
+    </div>
+
+    <div class="eval-container">
+        <div id="questionContainer"></div>
+
+        <div id="resultContainer" class="result-container">
+            <i class="fas fa-award" style="font-size: 4rem; color: var(--primary-color)"></i>
+            <h2>Evaluation Complete!</h2>
+            <div class="score">Score: <span id="finalScore">0</span>%</div>
+            <div id="feedback" class="feedback"></div>
+            <button class="next-btn" onclick="finishEvaluation()">
+                <i class="fas fa-check-circle"></i> Continue Learning
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                number: 1,
+                question: "What's the most appropriate greeting for 8:00 AM?",
+                options: ["Good morning", "Good afternoon", "Good evening", "Good night"],
+                correct: 0,
+                explanation: "We use 'Good morning' for times before noon (12:00 PM)."
+            },
+            {
+                number: 2,
+                question: "Which greeting is most formal?",
+                options: ["Hey", "Hi", "Hello", "What's up"],
+                correct: 2,
+                explanation: "'Hello' is the most formal and professional greeting."
+            },
+            {
+                number: 3,
+                question: "When would you use 'Good evening'?",
+                options: ["In the morning", "After 6 PM", "Before noon", "At midnight"],
+                correct: 1,
+                explanation: "'Good evening' is used after 6:00 PM until night time."
+            },
+            {
+                number: 4,
+                question: "Which greeting is most casual?",
+                options: ["Hello", "Good morning", "Hey", "Good afternoon"],
+                correct: 2,
+                explanation: "'Hey' is very casual and should only be used with friends."
+            },
+            {
+                number: 5,
+                question: "You meet your teacher at 2:00 PM. What do you say?",
+                options: ["Good morning", "Good afternoon", "Good evening", "Hey"],
+                correct: 1,
+                explanation: "Use 'Good afternoon' between 12:00 PM and 6:00 PM in formal situations."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answeredQuestions = new Set();
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            const container = document.getElementById('questionContainer');
+            
+            container.innerHTML = `
+                <div class="question-card">
+                    <div class="question-header">
+                        <div class="question-number">${question.number}</div>
+                        <h2>${question.question}</h2>
+                    </div>
+                    <div class="options-grid">
+                        ${question.options.map((option, index) => `
+                            <button class="option-btn" onclick="checkAnswer(${index})">
+                                <i class="fas fa-circle"></i>
+                                ${option}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            updateProgress();
+        }
+
+        function checkAnswer(selected) {
+            if (answeredQuestions.has(currentQuestion)) return;
+
+            const question = questions[currentQuestion];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach(btn => btn.disabled = true);
+            
+            if (selected === question.correct) {
+                buttons[selected].classList.add('correct');
+                score++;
+            } else {
+                buttons[selected].classList.add('incorrect');
+                buttons[question.correct].classList.add('correct');
+            }
+
+            answeredQuestions.add(currentQuestion);
+
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1500);
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.querySelector('.progress-fill').style.width = `${progress}%`;
+        }
+
+        function showResults() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('resultContainer').classList.add('show');
+            
+            const finalScore = Math.round((score / questions.length) * 100);
+            document.getElementById('finalScore').textContent = finalScore;
+            
+            const feedback = document.getElementById('feedback');
+            if (finalScore >= 80) {
+                feedback.innerHTML = `<i class="fas fa-star"></i> Excellent! You've mastered basic greetings!`;
+            } else if (finalScore >= 60) {
+                feedback.innerHTML = `<i class="fas fa-smile"></i> Good job! Keep practicing to improve.`;
+            } else {
+                feedback.innerHTML = `<i class="fas fa-book"></i> Review the lesson and try again.`;
+            }
+
+            // Store progress
+            localStorage.setItem('lesson1_complete', finalScore >= 70);
+        }
+
+        function finishEvaluation() {
+            window.location.href = '../beginner.html';
+        }
+
+        // Start the evaluation
+        showQuestion();
+    </script>
+    <script src="../floating-back-button.js"></script>
+</body>
+</html>
