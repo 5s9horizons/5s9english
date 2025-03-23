@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Quiz - 5s9 English</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f39c12;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --background-gradient: linear-gradient(135deg, navy 0%, #a400ff 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--background-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h1 {
+            background: var(--background-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: var(--background-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .option:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .option.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+
+        .option.wrong {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+
+        .result-container {
+            text-align: center;
+            display: none;
+        }
+
+        .score {
+            font-size: 2em;
+            background: var(--background-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .feedback {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: var(--background-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .animate__animated {
+            animation-duration: 0.5s;
+        }
+
+        @media (max-width: 480px) {
+            .quiz-container {
+                padding: 20px;
+            }
+
+            .quiz-header h1 {
+                font-size: 2em;
+            }
+
+            .question {
+                font-size: 1.1em;
+            }
+
+            .option {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container animate__animated animate__fadeIn">
+        <div class="quiz-header">
+            <h1>5s9<br>
+            English Quiz</h1>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+        </div>
+
+        <div class="question-container">
+            <div class="question"></div>
+            <div class="options"></div>
+        </div>
+
+        <div class="result-container">
+            <div class="score"></div>
+            <div class="feedback"></div>
+            <button class="btn" onclick="restartQuiz()">Try Again</button>
+            <button class="btn" onclick="showPage(level.html)"></button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.js" defer></script>
+    <script src="floating-back-button.js" defer></script>
+    <script>
+        const questions = [
+            {
+        question: "Choose the correct form of the verb:",
+        text: "She _____ to the store yesterday.",
+        options: ["go", "goes", "went", "gone"],
+        correct: 2,
+        level: "A0"
+    },
+    {
+        question: "Select the correct synonym:",
+        text: "The word 'ENORMOUS' means:",
+        options: ["tiny", "huge", "beautiful", "fast"],
+        correct: 1,
+        level: "A0"
+    },
+    {
+        question: "Identify the correct article:",
+        text: "I saw _____ eagle flying in the sky.",
+        options: ["a", "an", "the", "no article needed"],
+        correct: 1,
+        level: "A0"
+    },
+    {
+        question: "Choose the correct preposition:",
+        text: "The book is _____ the table.",
+        options: ["in", "on", "at", "by"],
+        correct: 1,
+        level: "A0"
+    },
+    {
+        question: "Select the correct plural form:",
+        text: "One child, two _____.",
+        options: ["childs", "childes", "children", "child"],
+        correct: 2,
+        level: "A0"
+    },
+    {
+        question: "Choose the correct personal pronoun:",
+        text: "_____ is my friend.",
+        options: ["I", "You", "He", "We"],
+        correct: 2,
+        level: "A0"
+    },
+    {
+        question: "Select the correct color:",
+        text: "The sky is _____.",
+        options: ["blue", "green", "red", "yellow"],
+        correct: 0,
+        level: "A0"
+    },
+    {
+        question: "Identify the correct number:",
+        text: "There are _____ days in a week.",
+        options: ["five", "six", "seven", "eight"],
+        correct: 2,
+        level: "A0"
+    },
+    {
+        question: "Choose the correct greeting:",
+        text: "When you meet someone in the morning, you say:",
+        options: ["Good evening", "Good night", "Good afternoon", "Good morning"],
+        correct: 3,
+        level: "A0"
+    },
+    {
+        question: "Select the correct form of 'to be':",
+        text: "I _____ happy.",
+        options: ["am", "is", "are", "be"],
+        correct: 0,
+        level: "A0"
+    },
+
+    // A1 Level (Beginner) - Questions 11-20
+    {
+        question: "Choose the correct tense:",
+        text: "I _____ breakfast every morning.",
+        options: ["eat", "eating", "ate", "eaten"],
+        correct: 0,
+        level: "A1"
+    },
+    {
+        question: "Select the correct possessive adjective:",
+        text: "She has _____ own car.",
+        options: ["she", "her", "hers", "she's"],
+        correct: 1,
+        level: "A1"
+    },
+    {
+        question: "Choose the correct question word:",
+        text: "_____ are you from?",
+        options: ["Where", "When", "Who", "What"],
+        correct: 0,
+        level: "A1"
+    },
+    {
+        question: "Select the correct adverb of frequency:",
+        text: "He _____ plays tennis on Sundays.",
+        options: ["never", "sometimes", "always", "rarely"],
+        correct: 1,
+        level: "A1"
+    },
+    {
+        question: "Choose the correct preposition of place:",
+        text: "The cat is _____ the chair.",
+        options: ["on", "in", "at", "from"],
+        correct: 0,
+        level: "A1"
+    },
+    {
+        question: "Select the correct modal verb:",
+        text: "I _____ speak English.",
+        options: ["can", "should", "would", "must"],
+        correct: 0,
+        level: "A1"
+    },
+    {
+        question: "Choose the correct imperative form:",
+        text: "_____ your shoes before entering.",
+        options: ["Taking off", "Take off", "Takes off", "Taken off"],
+        correct: 1,
+        level: "A1"
+    },
+    {
+        question: "Select the correct pronoun:",
+        text: "This book is _____.",
+        options: ["my", "mine", "me", "I"],
+        correct: 1,
+        level: "A1"
+    },
+    {
+        question: "Choose the correct opposite:",
+        text: "The opposite of 'hot' is:",
+        options: ["warm", "cool", "cold", "nice"],
+        correct: 2,
+        level: "A1"
+    },
+    {
+        question: "Select the correct time expression:",
+        text: "I'll see you _____ Monday.",
+        options: ["in", "on", "at", "by"],
+        correct: 1,
+        level: "A1"
+    },
+
+    // A2 Level (Elementary) - Questions 21-30
+    {
+        question: "Choose the correct comparative form:",
+        text: "This book is _____ than that one.",
+        options: ["interesting", "more interesting", "most interesting", "interestinger"],
+        correct: 1,
+        level: "A2"
+    },
+    {
+        question: "Select the correct past continuous form:",
+        text: "I _____ when the phone rang.",
+        options: ["sleep", "sleeping", "was sleeping", "slept"],
+        correct: 2,
+        level: "A2"
+    },
+    {
+        question: "Choose the correct quantifier:",
+        text: "There isn't _____ milk left in the fridge.",
+        options: ["much", "many", "few", "little"],
+        correct: 0,
+        level: "A2"
+    },
+    {
+        question: "Select the correct future form:",
+        text: "I _____ to the cinema tomorrow.",
+        options: ["go", "going", "will go", "gone"],
+        correct: 2,
+        level: "A2"
+    },
+    {
+        question: "Choose the correct phrasal verb:",
+        text: "Can you _____ the light, please?",
+        options: ["turn on", "turn up", "turn over", "turn in"],
+        correct: 0,
+        level: "A2"
+    },
+    {
+        question: "Select the correct infinitive form:",
+        text: "I want _____ English.",
+        options: ["learn", "to learn", "learning", "learned"],
+        correct: 1,
+        level: "A2"
+    },
+    {
+        question: "Choose the correct past simple form:",
+        text: "Last week, I _____ a new car.",
+        options: ["buy", "buys", "bought", "buying"],
+        correct: 2,
+        level: "A2"
+    },
+    {
+        question: "Select the correct preposition of time:",
+        text: "My birthday is _____ July.",
+        options: ["in", "on", "at", "during"],
+        correct: 0,
+        level: "A2"
+    },
+    {
+        question: "Choose the correct question tag:",
+        text: "You like coffee, _____?",
+        options: ["do you", "don't you", "are you", "aren't you"],
+        correct: 1,
+        level: "A2"
+    },
+    {
+        question: "Select the correct superlative form:",
+        text: "This is _____ building in the city.",
+        options: ["tall", "taller", "tallest", "the tallest"],
+        correct: 3,
+        level: "A2"
+    },
+
+    // B1 Level (Intermediate) - Questions 31-45
+    {
+        question: "Choose the correct present perfect form:",
+        text: "I _____ to Paris three times.",
+        options: ["go", "went", "gone", "have been"],
+        correct: 3,
+        level: "B1"
+    },
+    {
+        question: "Select the correct reported speech:",
+        text: "He said, 'I am tired.' → He said that _____.",
+        options: ["I am tired", "he is tired", "he was tired", "I was tired"],
+        correct: 2,
+        level: "B1"
+    },
+    {
+        question: "Choose the correct conditional form (First Conditional):",
+        text: "If it _____ tomorrow, we'll go to the beach.",
+        options: ["rains", "will rain", "rained", "is raining"],
+        correct: 0,
+        level: "B1"
+    },
+    {
+        question: "Select the correct passive voice:",
+        text: "The letter _____ yesterday.",
+        options: ["sent", "was sent", "is sent", "sends"],
+        correct: 1,
+        level: "B1"
+    },
+    {
+        question: "Choose the correct relative pronoun:",
+        text: "The woman _____ lives next door is a doctor.",
+        options: ["who", "which", "whose", "whom"],
+        correct: 0,
+        level: "B1"
+    },
+    {
+        question: "Select the correct modal verb for advice:",
+        text: "You _____ see a doctor about that cough.",
+        options: ["can", "might", "should", "would"],
+        correct: 2,
+        level: "B1"
+    },
+    {
+        question: "Choose the correct gerund or infinitive:",
+        text: "I enjoy _____ books in my free time.",
+        options: ["read", "to read", "reading", "reads"],
+        correct: 2,
+        level: "B1"
+    },
+    {
+        question: "Select the correct used to form:",
+        text: "I _____ a lot when I was younger.",
+        options: ["used to smoke", "use to smoke", "used smoking", "using to smoke"],
+        correct: 0,
+        level: "B1"
+    },
+    {
+        question: "Choose the correct collocation:",
+        text: "Can you _____ me a favor?",
+        options: ["make", "do", "give", "take"],
+        correct: 1,
+        level: "B1"
+    },
+    {
+        question: "Select the correct phrasal verb:",
+        text: "I need to _____ this form before I submit it.",
+        options: ["fill up", "fill in", "fill out", "fill over"],
+        correct: 2,
+        level: "B1"
+    },
+    {
+        question: "Choose the correct article usage:",
+        text: "_____ United Kingdom is an island nation.",
+        options: ["A", "An", "The", "No article"],
+        correct: 2,
+        level: "B1"
+    },
+    {
+        question: "Select the correct present perfect continuous form:",
+        text: "I _____ English for three years now.",
+        options: ["study", "am studying", "have studied", "have been studying"],
+        correct: 3,
+        level: "B1"
+    },
+    {
+        question: "Choose the correct idiom:",
+        text: "The test was very easy. It was _____.",
+        options: ["piece of cake", "cup of tea", "slice of bread", "bowl of soup"],
+        correct: 0,
+        level: "B1"
+    },
+    {
+        question: "Select the correct preposition:",
+        text: "I'm not very good _____ sports.",
+        options: ["at", "in", "on", "with"],
+        correct: 0,
+        level: "B1"
+    },
+    {
+        question: "Choose the correct conjunction:",
+        text: "I wanted to go to the party, _____ I had to study.",
+        options: ["so", "and", "but", "or"],
+        correct: 2,
+        level: "B1"
+    },
+
+    // B2 Level (Upper Intermediate) - Questions 46-60
+    {
+        question: "Choose the correct third conditional form:",
+        text: "If I _____ about the meeting, I would have attended it.",
+        options: ["knew", "had known", "know", "have known"],
+        correct: 1,
+        level: "B2"
+    },
+    {
+        question: "Select the correct passive voice in the past perfect:",
+        text: "The project _____ before the deadline.",
+        options: ["completed", "was completed", "had been completed", "has been completed"],
+        correct: 2,
+        level: "B2"
+    },
+    {
+        question: "Choose the correct inversion for emphasis:",
+        text: "_____ I understand the complexity of the situation.",
+        options: ["Only now", "Now only", "Only", "Now"],
+        correct: 0,
+        level: "B2"
+    },
+    {
+        question: "Select the correct future perfect form:",
+        text: "By next year, I _____ in this company for ten years.",
+        options: ["will work", "will be working", "will have worked", "will have been working"],
+        correct: 2,
+        level: "B2"
+    },
+    {
+        question: "Choose the correct mixed conditional:",
+        text: "If I had studied medicine, I _____ a doctor now.",
+        options: ["would be", "would have been", "will be", "had been"],
+        correct: 0,
+        level: "B2"
+    },
+    {
+        question: "Select the correct participle clause:",
+        text: "_____ the book, I went to bed.",
+        options: ["After reading", "After I read", "After read", "After I reading"],
+        correct: 0,
+        level: "B2"
+    },
+    {
+        question: "Choose the correct subjunctive form:",
+        text: "The manager insisted that the report _____ by Friday.",
+        options: ["is completed", "be completed", "was completed", "will be completed"],
+        correct: 1,
+        level: "B2"
+    },
+    {
+        question: "Select the correct structure for expressing regret:",
+        text: "I _____ harder for the exam.",
+        options: ["should study", "should have studied", "must study", "must have studied"],
+        correct: 1,
+        level: "B2"
+    },
+    {
+        question: "Choose the correct causative form:",
+        text: "I _____ my hair cut yesterday.",
+        options: ["did", "made", "had", "got"],
+        correct: 2,
+        level: "B2"
+    },
+    {
+        question: "Select the correct phrasal verb:",
+        text: "The meeting has been _____ until next week.",
+        options: ["put off", "put away", "put out", "put up"],
+        correct: 0,
+        level: "B2"
+    },
+    {
+        question: "Choose the correct modal perfect:",
+        text: "You _____ me about the change in plans.",
+        options: ["should tell", "should have told", "must tell", "must have told"],
+        correct: 1,
+        level: "B2"
+    },
+    {
+        question: "Select the correct formal expression:",
+        text: "_____ your proposal, I have some concerns.",
+        options: ["According to", "With reference to", "Regarding", "As per"],
+        correct: 2,
+        level: "B2"
+    },
+    {
+        question: "Choose the correct indirect question:",
+        text: "Can you tell me _____?",
+        options: ["where is the station", "where the station is", "the station where is", "is where the station"],
+        correct: 1,
+        level: "B2"
+    },
+    {
+        question: "Select the correct reduced relative clause:",
+        text: "The man _____ at the conference is my professor.",
+        options: ["speaks", "speaking", "spoke", "has spoken"],
+        correct: 1,
+        level: "B2"
+    },
+    {
+        question: "Choose the correct advanced collocation:",
+        text: "The new policy _____ into effect next month.",
+        options: ["comes", "goes", "takes", "brings"],
+        correct: 0,
+        level: "B2"
+    },
+
+    // C1 Level (Advanced) - Questions 61-80
+    {
+        question: "Choose the correct inversion with negative adverbial:",
+        text: "_____ the real reason for his absence.",
+        options: ["Not only he knew", "Not only did he know", "He not only knew", "He did not only know"],
+        correct: 1,
+        level: "C1"
+    },
+    {
+        question: "Select the correct cleft sentence:",
+        text: "_____ why he resigned from his position.",
+        options: ["It was", "What was", "That was", "There was"],
+        correct: 0,
+        level: "C1"
+    },
+    {
+        question: "Choose the correct participle construction:",
+        text: "_____ by the news, she couldn't sleep that night.",
+        options: ["Shocked", "Being shocked", "Having shocked", "To be shocked"],
+        correct: 0,
+        level: "C1"
+    },
+    {
+        question: "Select the correct advanced passive construction:",
+        text: "The suspect _____ to have fled the country.",
+        options: ["is believed", "believes", "is believing", "has believed"],
+        correct: 0,
+        level: "C1"
+    },
+    {
+        question: "Choose the correct subjunctive in a formal context:",
+        text: "The committee recommended that the proposal _____ in its entirety.",
+        options: ["is reviewed", "be reviewed", "was reviewed", "will be reviewed"],
+        correct: 1,
+        level: "C1"
+    },
+    {
+        question: "Select the correct inversion for emphasis:",
+        text: "_____ realized the magnitude of the problem.",
+        options: ["Little did he", "He little did", "Did he little", "Little he did"],
+        correct: 0,
+        level: "C1"
+    },
+    {
+        question: "Choose the correct structure with 'would rather':",
+        text: "I would rather you _____ about this issue for now.",
+        options: ["don't talk", "didn't talk", "not talk", "hadn't talked"],
+        correct: 1,
+        level: "C1"
+    },
+    {
+        question: "Select the correct future perfect continuous:",
+        text: "By the end of this year, she _____ for the company for a decade.",
+        options: ["will work", "will be working", "will have worked", "will have been working"],
+        correct: 3,
+        level: "C1"
+    },
+    {
+        question: "Choose the correct nominalization:",
+        text: "The _____ of the new policy was met with resistance.",
+        options: ["implement", "implemented", "implementation", "implementing"],
+        correct: 2,
+        level: "C1"
+    },
+    {
+        question: "Select the correct complex preposition:",
+        text: "_____ the weather, the event was a success.",
+        options: ["In spite of", "Despite of", "Although", "Even"],
+        correct: 0,
+        level: "C1"
+    },
+    {
+        question: "Choose the correct advanced modal expression:",
+        text: "She _____ have forgotten our appointment.",
+        options: ["might", "can", "should", "would"],
+        correct: 0,
+        level: "C1"
+    },
+    {
+        question: "Select the correct idiomatic expression:",
+        text: "The new regulations have really _____ for small businesses.",
+        options: ["raised the bar", "hit the nail on the head", "moved the goalposts", "opened a can of worms"],
+        correct: 2,
+        level: "C1"
+    },
+    {
+        question: "Choose the correct reduced adverbial clause:",
+        text: "_____ in Paris, she improved her French significantly.",
+        options: ["While living", "While she lived", "While she was living", "While she has lived"],
+        correct: 0,
+        level: "C1"
+    },
+    {
+        question: "Select the correct hedging language:",
+        text: "The results _____ indicate a correlation between the variables.",
+        options: ["clearly", "certainly", "definitively", "would seem to"],
+        correct: 3,
+        level: "C1"
+    },
+    {
+        question: "Choose the correct adverbial:",
+        text: "_____, the proposal was accepted by the board.",
+        options: ["Surprisingly", "Surprise", "Surprised", "Surprising"],
+        correct: 0,
+        level: "C1"
+    },
+    {
+        question: "Select the correct advanced conditional:",
+        text: "_____ the funding come through, the project will proceed.",
+        options: ["If", "Unless", "Should", "When"],
+        correct: 2,
+        level: "C1"
+    },
+    {
+        question: "Choose the correct compound adjective:",
+        text: "The company has implemented a _____ approach to customer service.",
+        options: ["state-of-the-art", "best of the best", "top quality", "high level"],
+        correct: 0,
+        level: "C1"
+    },
+    {
+        question: "Select the correct complex sentence structure:",
+        text: "_____ the challenges faced, they managed to complete the project on time.",
+        options: ["Despite", "Although", "Notwithstanding", "Even though"],
+        correct: 2,
+        level: "C1"
+    },
+    {
+        question: "Choose the correct formal expression:",
+        text: "I am writing to express my _____ regarding the recent changes.",
+        options: ["thoughts", "concerns", "ideas", "opinions"],
+        correct: 1,
+        level: "C1"
+    },
+    {
+        question: "Select the correct advanced collocation:",
+        text: "The economic crisis has _____ unprecedented challenges.",
+        options: ["made", "created", "posed", "formed"],
+        correct: 2,
+        level: "C1"
+    },
+
+    // C2 Level (Proficiency) - Questions 81-102
+    {
+        question: "Choose the correct literary device:",
+        text: "The wind _____ through the trees.",
+        options: ["whispered", "moved", "blew", "traveled"],
+        correct: 0,
+        level: "C2"
+    },
+    {
+        question: "Select the correct formal subjunctive:",
+        text: "It is imperative that these measures _____ immediately.",
+        options: ["are implemented", "be implemented", "will be implemented", "have been implemented"],
+        correct: 1,
+        level: "C2"
+    },
+    {
+        question: "Choose the correct advanced inversion:",
+        text: "_____ the government announce new policies.",
+        options: ["Under no circumstances will", "In no circumstances", "Under no circumstances", "No circumstances will"],
+        correct: 0,
+        level: "C2"
+    },
+    {
+        question: "Select the correct complex phrasal verb:",
+        text: "The new evidence _____ the need for further investigation.",
+        options: ["points out", "points to", "points up", "points at"],
+        correct: 2,
+        level: "C2"
+    },
+    {
+        question: "Choose the correct nuanced expression:",
+        text: "Her argument, while _____, fails to address the core issue.",
+        options: ["persuasive", "compelling", "convincing", "cogent"],
+        correct: 3,
+        level: "C2"
+    },
+    {
+        question: "Select the correct complex sentence with subordinate clauses:",
+        text: "_____ the company implements the suggested changes, it will struggle to remain competitive.",
+        options: ["Unless", "Even if", "Provided that", "In case"],
+        correct: 0,
+        level: "C2"
+    },
+    {
+        question: "Choose the correct advanced passive construction:",
+        text: "The defendant _____ to have been at the scene of the crime.",
+        options: ["is known", "is thought", "is alleged", "is supposed"],
+        correct: 2,
+        level: "C2"
+    },
+    {
+        question: "Select the correct academic expression:",
+        text: "The research _____ the hypothesis that environmental factors play a significant role.",
+        options: ["supports", "reinforces", "backs", "corroborates"],
+        correct: 3,
+        level: "C2"
+    },
+    {
+        question: "Choose the correct formal concessive:",
+        text: "_____ the limitations of the study, the findings are still valuable.",
+        options: ["Despite", "Although", "Even though", "Notwithstanding"],
+        correct: 3,
+        level: "C2"
+    },
+    {
+        question: "Select the correct advanced idiom:",
+        text: "The negotiation was a real _____ with neither side willing to compromise.",
+        options: ["dead end", "Mexican standoff", "wild goose chase", "red herring"],
+        correct: 1,
+        level: "C2"
+    },
+    {
+        question: "Choose the correct advanced parallel structure:",
+        text: "The CEO's speech was characterized by clarity of vision, _____, and eloquence of delivery.",
+        options: ["strength of purpose", "purposefully strong", "strong purpose", "purpose is strong"],
+        correct: 0,
+        level: "C2"
+    },
+    {
+        question: "Select the correct complex sentence with multiple subordinate clauses:",
+        text: "_____ the budget constraints, the project will continue as planned.",
+        options: ["Although there are", "Despite there being", "In spite of there being", "Even though there are"],
+        correct: 2,
+        level: "C2"
+    },
+    {
+        question: "Choose the correct sophisticated phrasal verb:",
+        text: "The scandal _____ the company's reputation.",
+        options: ["damaged", "harmed", "tarnished", "put paid to"],
+        correct: 3,
+        level: "C2"
+    },
+    {
+        question: "Select the correct complex noun phrase:",
+        text: "The _____ of resources is a major concern for developing nations.",
+        options: ["fair distribution", "equitable allocation", "just division", "rightful sharing"],
+        correct: 1,
+        level: "C2"
+    },
+    {
+        question: "Choose the correct advanced participle phrase:",
+        text: "_____ the deadline, the team worked through the night.",
+        options: ["Facing", "Having faced", "Being faced with", "Having been faced with"],
+        correct: 2,
+        level: "C2"
+    },
+    {
+        question: "Select the correct advanced conditional:",
+        text: "_____ for the quick response of the emergency services, the situation would have been much worse.",
+        options: ["If it wasn't", "If it hadn't been", "Had it not been", "Were it not"],
+        correct: 2,
+        level: "C2"
+    },
+    {
+        question: "Choose the correct sophisticated collocation:",
+        text: "The government has _____ a series of measures to tackle the economic crisis.",
+        options: ["made", "done", "implemented", "enacted"],
+        correct: 3,
+        level: "C2"
+    },
+    {
+        question: "Select the correct complex preposition:",
+        text: "The decision was made _____ the board's recommendations.",
+        options: ["in accordance with", "according to", "in line with", "as per"],
+        correct: 0,
+        level: "C2"
+    },
+    {
+        question: "Choose the correct advanced modal expression:",
+        text: "The candidate _____ to have withdrawn from the race due to personal reasons.",
+        options: ["is said", "is thought", "is understood", "is believed"],
+        correct: 2,
+        level: "C2"
+    },
+    {
+        question: "Select the correct nuanced expression:",
+        text: "The criticism was _____ rather than constructive.",
+        options: ["biting", "harsh", "scathing", "severe"],
+        correct: 2,
+        level: "C2"
+    },
+    {
+        question: "Choose the correct advanced discourse marker:",
+        text: "_____, the policy has been successful in reducing unemployment.",
+        options: ["In conclusion", "To sum up", "By and large", "All things considered"],
+        correct: 3,
+        level: "C2"
+    },
+    {
+        question: "Select the correct expression of certainty:",
+        text: "It is _____ that the company will merge with its competitor.",
+        options: ["likely", "probable", "possible", "all but certain"],
+        correct: 3,
+        level: "C2"
+    }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let canAnswer = true;
+
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.querySelector('.question').innerHTML = `
+                <h2 class="animate__animated animate__fadeIn">${question.question}</h2>
+                <p class="animate__animated animate__fadeIn">${question.text}</p>
+            `;
+
+            const optionsHtml = question.options.map((option, index) => `
+                <div class="option animate__animated animate__fadeInUp" 
+                     style="animation-delay: ${index * 0.1}s"
+                     onclick="checkAnswer(${index})">
+                    ${option}
+                </div>
+            `).join('');
+
+            document.querySelector('.options').innerHTML = optionsHtml;
+            updateProgress();
+        }
+
+        function checkAnswer(selectedIndex) {
+            if (!canAnswer) return;
+            canAnswer = false;
+
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+
+            options[question.correct].classList.add('correct', 'animate__animated', 'animate__pulse');
+
+            if (selectedIndex === question.correct) {
+                score++;
+                options[selectedIndex].classList.add('correct', 'animate__animated', 'animate__pulse');
+            } else {
+                options[selectedIndex].classList.add('wrong', 'animate__animated', 'animate__shakeX');
+            }
+
+            setTimeout(() => {
+                currentQuestion++;
+                canAnswer = true;
+
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                } else {
+                    showResult();
+                }
+            }, 1500);
+        }
+
+        function updateProgress() {
+            const progress = (currentQuestion / questions.length) * 100;
+            document.querySelector('.progress').style.width = `${progress}%`;
+        }
+
+        function showResult() {
+            const percentage = (score / questions.length) * 100;
+            const resultContainer = document.querySelector('.result-container');
+            const questionContainer = document.querySelector('.question-container');
+
+            questionContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+            resultContainer.classList.add('animate__animated', 'animate__fadeIn');
+
+            document.querySelector('.score').textContent = `Score: ${score}/${questions.length} (${percentage}%)`;
+            
+            let feedback;
+            if (percentage === 100) {
+                feedback = "Perfect! You're a grammar master! 🏆";
+            } else if (percentage >= 80) {
+                feedback = "Great job! Keep up the good work! 👏";
+            } else if (percentage >= 60) {
+                feedback = "Good effort! Practice makes perfect! 💪";
+            } else {
+                feedback = "Keep studying! You'll improve! 📚";
+            }
+
+            document.querySelector('.feedback').textContent = feedback;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            canAnswer = true;
+
+            const resultContainer = document.querySelector('.result-container');
+            const questionContainer = document.querySelector('.question-container');
+
+            resultContainer.style.display = 'none';
+            questionContainer.style.display = 'block';
+
+            showQuestion();
+        }
+
+        // Start the quiz
+        showQuestion();
+    </script>
+</body>
+</html>
